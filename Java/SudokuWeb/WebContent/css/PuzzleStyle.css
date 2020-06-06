@@ -1,0 +1,82 @@
+@charset "UTF-8";
+
+header {
+  font-variant: small-caps;
+  font-family: Arial, sans-serif;
+  text-align: left;
+}
+
+h1{
+  padding-left: 12vw;
+  font-size: 5vmin;
+  display: inline-block;
+  height: 2.5vmin;
+}
+
+.page {
+  position: absolute;
+  top: 13vmin;
+  bottom: 0;
+  left: 8vw;
+  right: 0;
+  text-align: center;
+  width:80vw;
+  height: 83vh;
+}
+
+.stats {
+	float: left;
+	clear: both;
+	padding-left: 5%;
+	height: 5%;
+}
+
+.sudoku{
+  position: relative;
+  margin: auto;
+  width: 63vmin;
+  height: 63vmin;
+  font-family: Arial, sans-serif;
+  border-collapse: collapse;
+  border-color: rgba(40, 83, 197, 1);
+  border-width: 2px;
+}
+
+.sudoku td {
+  width: 7vmin;
+  height: 7vmin;
+  padding: 0;
+  margin: 0;
+}
+
+.sudoku td {
+  position: relative;
+}
+.sudoku td:hover {
+  background-color: #ccc;
+}
+
+.home {
+  margin-left: 50%;
+  display: inline-block;
+}
+
+.top_y {
+	border-left-width: 2px;
+	border-top-width: 2px;
+}
+
+.top_n {
+	border-left-width: 1px;
+	border-top-width: 2px;
+}
+
+.middle_y {
+	border-left-width: 2px;
+	border-top-width: 1px;
+}
+
+.middle_n {
+	border-left-width: 1px;
+	border-top-width: 1px;	
+}
