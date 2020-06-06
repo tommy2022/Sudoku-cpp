@@ -123,11 +123,11 @@
           </tr>
         </table>
       </td>
-      <td> 
+      <td> <div class='stats'>
         <p>Difficulty: <%=difficulty %></p>
         <p>Option: <%=option %></p>
-        <p>Time Elapsed <span id="minutes"></span>:<span id="seconds"></span></p>	
-      </td>
+        <p>Time Elapsed <span id="minutes"></span>:<span id="seconds"></span></p>
+      </div></td>
     </tr>
     <tr height="70%">
       <td> stuffs </td>
