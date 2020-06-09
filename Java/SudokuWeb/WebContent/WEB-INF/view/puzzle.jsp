@@ -4,8 +4,8 @@
 <html>
 	<% String difficulty = (String) request.getAttribute("difficulty"); %>
 	<% String option = (String) request.getAttribute("option"); %>
-	<% String problem = (String) request.getAttribute("option"); %>
-	<% String solution = (String) request.getAttribute("option"); %>
+	<% String problem = (String) request.getAttribute("problem"); %>
+	<% String solution = (String) request.getAttribute("solution"); %>
 <head>
   <meta charset="UTF-8">
   <title>Puzzle_<%=difficulty %>_<%=option %></title>
@@ -13,14 +13,17 @@
   <script src="https://kit.fontawesome.com/214bbd63e6.js" crossorigin="anonymous"></script>
 </head>
 <body>
+  <input type="hidden" id="solution" value="<%=solution%>">
+  <input type="hidden" id="selected" value="T0">
+  <input type="hidden" id="blue" value="">
   <header>
     <h1>Sudoku</h1>
     <a href = "./index.jsp" aria-label = "Home" class='home'><i class="fas fa-home" ></i> </a>
     <hr />
   </header>
-  <table class='page' border='1'>
-    <tr height="30%">
-      <td rowspan="2" width = 50%>
+  <table class='page'>
+    <tr>
+      <td rowspan="2" width="50%">
         <table border="2" class='sudoku'>
           <tr>
 	          <td id="T0"></td>
@@ -119,22 +122,65 @@
 			  <td id="T77"></td>
 			  <td id="T78"></td>
 			  <td id="T79"></td>
-			  <td if="T80"></td>
+			  <td id="T80"></td>
           </tr>
         </table>
       </td>
-      <td> <div class='stats'>
+      <td class="stats" cellpadding="0" cellspacing="0"> 
         <p>Difficulty: <%=difficulty %></p>
-        <p>Option: <%=option %></p>
-        <p>Time Elapsed <span id="minutes"></span>:<span id="seconds"></span></p>
-      </div></td>
-    </tr>
-    <tr height="70%">
-      <td> stuffs </td>
+        <p>Problem: <%=option %></p>
+        <p>Time Elapsed <span id="minutes"></span>:<span id="seconds"></span></p>	
+      </td>
+      <td width="30%"></td>
     </tr>
     <tr>
-      <td> current status displayed here</td>
-      <td> submit button goes here</td>
+      <td height="60%"> 
+	 	<table class="inputBox" cellpadding="0" cellspacing="0">
+	 	<tr> <td><input class="inputButton" type="button" value="1" onclick="setValue(this.value)"></td>
+	 		<td><input class="inputButton" type="button" value="2" onclick="setValue(this.value)"></td>
+	 		<td><input class=inputButton type="button" value="3" onclick="setValue(this.value)"></td>
+	 	</tr>
+	 	<tr> <td><input class="inputButton" type="button" value="4" onclick="setValue(this.value)"></td>
+	 		<td><input class="inputButton" type="button" value="5" onclick="setValue(this.value)"></td>
+	 		<td><input class="inputButton" type="button" value="6" onclick="setValue(this.value)"></td>
+	 	</tr>
+	 	<tr> <td><input class="inputButton" type="button" value="7" onclick="setValue(this.value)"></td>
+	 		<td><input class="inputButton" type="button" value="8" onclick="setValue(this.value)"></td>
+	 		<td><input class="inputButton" type="button" value="9" onclick="setValue(this.value)"></td>
+	 	</tr>	 		 	
+	 	</table> 
+	   </td>
+	   <td> <table class="specialHelp">
+		   <tr>
+			<td><input class="helpButton" type="button" value="Clear" onclick="clear()"></td>
+	 		<td><input class="helpButton" type="button" value="Erase" onclick="erase()"></td>
+		   </tr>
+		   <tr>
+			<td><input class="helpButton" type="button" value="Check" onclick="check()"></td>
+	 		<td><input class="helpButton" type="button" value="Pause" onclick="pause()"></td>
+		   </tr>
+		   <tr>
+		   	<td colspan="2">
+		   		<input class="helpButton" type="button" value="Submit" disabled onclick=></td>
+		   </tr>
+	   </table></td>
+	 </tr>
+	 	
+    <tr height="9%">
+      <td class="statusCell"> 
+      	<input id="find1" class="statusBlock" type="button" value="1" onclick="find(this.value)">
+      	<input id="find2" class="statusBlock" type="button" value="2" onclick="find(this.value)">
+      	<input id="find3" class="statusBlock" type="button" value="3" onclick="find(this.value)">
+      	<input id="find4" class="statusBlock" type="button" value="4" onclick="find(this.value)">
+      	<input id="find5" class="statusBlock" type="button" value="5" onclick="find(this.value)">
+      	<input id="find6" class="statusBlock" type="button" value="6" onclick="find(this.value)">
+      	<input id="find7" class="statusBlock" type="button" value="7" onclick="find(this.value)">
+      	<input id="find8" class="statusBlock" type="button" value="8" onclick="find(this.value)">
+      	<input id="find9" class="statusBlock" type="button" value="9" onclick="find(this.value)">
+      	
+      </td>
+      <td></td>
+      <td></td>
     </tr>
   </table>
   <script>
@@ -146,49 +192,136 @@
 	      document.getElementById("minutes").innerHTML=pad(parseInt(sec/60,10));
 	  }, 1000);
  </script>
-  <script>
+ <script>
  	 //set table
- 	 var id = "";
- 	 var col = "";
- 	 var row = "";
  	 var className = "";
- 	 var problem = "0101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010"
- 	 //var problem = request.getAttribute("problem");
- 	 var num = 0;
+ 	 var problem = "<%=problem%>"
+
 	 for (let i = 0; i < 81; i++) {
 		 if (i % 3 == 0) {
-			 col = "y";
+			 var col = "y";
 		 }
 		 else {
-			 col = "n";
+			 var col = "n";
 		 }
 		 if (Math.floor(i / 9) % 3 == 0) {
-			 row = "top";
+			 var row = "top";
 		 }
 		 else {
-			 row = "middle";
+			 var row = "middle";
 		 }
-		 id = i.toString();
-		 tdata = document.getElementById("T"+id);
+		 var id = i.toString();
+		 tcell = document.getElementById("T" + id);
 		 className = row + "_" + col;
 		 
-		 tdata.setAttribute("class", className);
-
-		 num = parseInt(problem.charAt(i));
+		 tcell.setAttribute("class", className);
+		 tcell.setAttribute("onclick", "onclickTd(this)");
+		 tcell.innerHTML = '<input id="I' + id + '" type="button" value=""'
+		 + ' onkeypress="return isNumber(this, event)">';
+		 
+		 tinput = document.getElementById("I" + id);
+		 var num = parseInt(problem.charAt(i));
 		 
 		 if (num == 0) {
-			 tdata.setAttribute("maxlength", "1");
+			 tinput.setAttribute("maxlength", "1");
+			 tinput.setAttribute("class", "nonfilled_inputBox");
 		 }
 		 
 		 else {
-			 tdata.setAttribute("readonly", true);
-			 tdata.innerHTML = num;
+			 tcell.setAttribute("class", tcell.getAttribute("class") + " prefilledCell");
+			 tinput.setAttribute("class", "prefilled_inputBox");
+			 tinput.setAttribute("value", num.toString());
+			 tinput.setAttribute("readonly", "");
 		 }
-		 
-		 //tdata.innerHTML = 
-		 
 	 }
- 	 
-  </script>
+</script>
+<script>
+		function onclickTd(td) {
+			selected = document.getElementById("selected");
+			document.getElementById(selected.value).style.background = "";
+			deleteblue();
+			td.style.background = "rgba(255, 218, 0, 0.6)";
+			selected.value = td.id;
+		}
+		
+		function deleteblue() {
+			blue = document.getElementById("blue");
+			const id = blue.value.split(" ");
+			for (let i = 1; i <= id[0]; i++) {
+				document.getElementById(id[i]).style.background = "";
+			}
+			blue.value = "0";
+		}
+	
+	function isNumber(td, evt) {
+		if (td.getAttribute("class") == "prefilled_inputBox") {
+			return false;
+		}
+	    evt = (evt) ? evt : window.event;
+	    var charCode = (evt.which) ? evt.which : evt.keyCode;
+	    if (charCode > 31 && (charCode < 49 || charCode > 57)) {
+	        return false;
+	    }
+	    find_helper((charCode - 48).toString());
+	    inputBox = document.getElementById("I" + td.id.substring(1));
+	    inputBox.setAttribute("value", (charCode - 48).toString());
+	    return true;
+	}
+	
+	function find(number) {
+		selected = document.getElementById("selected");
+		document.getElementById(selected.value).style.background = "";
+		selected.value = "T0"
+		find_helper(number);
+	}
+	
+	function find_helper(number) {
+		var elements = "";
+		var counter = 0;
+		blue = document.getElementById("blue");
+		if (blue.value != "0") {
+			deleteblue();
+		}
+		for (let i = 0; i < 81; i++) {
+			var id = i.toString();
+			tinput = document.getElementById("I" + id);
+			if (tinput.value == number
+					&& ("T" + id) != document.getElementById("selected").value) {
+				td = document.getElementById("T" + id);
+				td.style.background = "rgba(10, 140, 255, 0.2)";
+				elements += " " + td.id;
+				counter++;
+			}
+		}
+		elements = counter.toString() + elements;
+		blue.value = elements;
+	}
+	
+	function setValue(num) {
+		//id = document.getElementById("selected").value.subString(1);
+		inputBox = document.getElementById("T1");
+		inputBox.value = num;
+		
+	}
+</script>
+<script>
+	function Clear() {
+		
+	}
+	
+	function Erase() {
+		
+	}
+	
+	function Check() {
+		
+	}
+	
+	function Pause() {
+		
+	}
+	
+</script>
+
 </body>
 </html>
